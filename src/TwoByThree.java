@@ -1,8 +1,5 @@
 import java.util.ArrayList;
 
-/**
- * Created by dewdmcmann on 6/20/16.
- */
 public class TwoByThree {
 
     static ArrayList<Character> abcs = new ArrayList<Character>();
@@ -16,7 +13,7 @@ public class TwoByThree {
     public static void main(String[] args) {
 
         //get input from command line
-        String puzzle = args[0];
+        String puzzle = args[0].toLowerCase();
         checkUserPuzzle(puzzle);
         String spacingIndicator = args[1]; 
         String formattedPuzzle = formatPuzzleWithSpace(puzzle, spacingIndicator); 
@@ -93,7 +90,7 @@ public class TwoByThree {
     }
 
     /*
-     * Pre-condition: user_Puzzle is one word. spacingIndicator is in the format: 
+     * Pre-condition: userPuzzle is one word. spacingIndicator is in the format:
      *                 "<size of first word>,<size of second word>".
      * Post-condition: returns a string equivalent to userPuzzle argument except 
      *                 with a space inserted at index specified by spacingIndicator. 
