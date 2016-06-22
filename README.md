@@ -18,6 +18,8 @@ Compile and run with the puzzle as argument 1 and size of individual words as ar
 * cha_t__m_mb__ 7,6 *charter member*
 * \_me__ing_a_t_ 8,5 *smelling salts*
 * _uh____d_li 8,3 *muhammad ali*
+* f_rst_____g 4,6 *first inning*
+* _oph___nd__ils 3,3,3,5 *top hat and tails*
 
 
 ###TODO:
