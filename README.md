@@ -7,10 +7,12 @@ The puzzle rules follow:
 
 ##Usage:
 
-Compile and run with the puzzle as argument 1 and size of individual words as argument 2.
+Go to main directory with pom.xml. Maven install and run the .jar with the puzzle as argument 1 and size of individual words as argument 2.
 
-     javac TwoByThree.java
-     java TwoByThree mi___l__k_ 4,6 
+     cd two-by-three
+     mvn clean install
+     cd target
+     java -cp two-by-three-1.0-SNAPSHOT.jar TwoByThree b___ba___l 4,6
 
 ##Some test inputs:
 
@@ -18,11 +20,13 @@ Compile and run with the puzzle as argument 1 and size of individual words as ar
 * cha_t__m_mb__ 7,6 *charter member*
 * \_me__ing_a_t_ 8,5 *smelling salts*
 * _uh____d_li 8,3 *muhammad ali*
-* f_rst_____g 4,6 *first inning*
-* _oph___nd__ils 3,3,3,5 *top hat and tails*
+* f_rst_____g 5,6 *first inning*
+* _oph___nd__ils 3,3,3,5 *top hat and tails* **BROKEN**
 
 
 ###TODO:
 
-- [ ] Check each answer against a dictionary library and output only those that match.
+- [x] Check each answer against a dictionary library and output only those that match.
 - [ ] Make output more pretty.
+- [ ] Add support for more than 2 words.
+- [ ] Add a manifest for an executable .jar file.
