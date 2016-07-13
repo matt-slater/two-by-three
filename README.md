@@ -21,12 +21,14 @@ Go to main directory with pom.xml. Maven install and run the .jar with the puzzl
 * \_me__ing_a_t_ 8,5 *smelling salts*
 * _uh____d_li 8,3 *muhammad ali*
 * f_rst_____g 5,6 *first inning*
-* _oph___nd__ils 3,3,3,5 *top hat and tails* **BROKEN**
+* _oph___nd__ils 3,3,3,5 *top hat and tails*
 
 
 ###TODO:
 
 - [x] Check each answer against a dictionary library and output only those that match.
 - [ ] Make output more pretty.
-- [ ] Add support for more than 2 words.
+- [x] Add support for more than 2 words.
 - [ ] Add a manifest for an executable .jar file.
+- [ ] Add user-input checking
+- [ ] Add usage instructions in case of no CL Arguments

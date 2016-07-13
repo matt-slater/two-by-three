@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.jar.Pack200;
+
 
 public class TwoByThree {
 
@@ -12,11 +15,12 @@ public class TwoByThree {
     static Dictionary dictionary = new Dictionary();
 
     public static void main(String[] args) {
-
+        checkCommandLineArgs(args);
         //get input from command line
         String puzzle = args[0].toLowerCase();
         checkUserPuzzle(puzzle);
-        String spacingIndicator = args[1]; 
+        String spacingIndicator = args[1];
+        checkSpacingIndicator(spacingIndicator, puzzle);
         String formattedPuzzle = formatPuzzleWithSpace(puzzle, spacingIndicator); 
         globalInputString = formattedPuzzle;
 
@@ -40,7 +44,6 @@ public class TwoByThree {
         for (char c : alphabet.toCharArray()) {
             abcs.add(c);
         }
-
         System.out.println("Preparing the alphabet...");
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) != '_') {
@@ -75,45 +78,125 @@ public class TwoByThree {
                 counter++;
             }
         }
-
         String answers = String.valueOf(array);
         checkAgainstDictionary(answers);
-
     }
 
     /*
+     * Checks to make sure user provided 2 command line arguments.
+     * If there are not two arguments, tells user how to run program
+     * from command line and quits program.
+     */
+    static void checkCommandLineArgs(String[] args) {
+        System.out.println("Checking command line arguments...");
+        if (args.length != 2) {
+            System.out.println("Error: Usage: java -cp two-by-three-1.0-SNAPSHOT.jar TwoByThree <puzzle> <word lengths>");
+            System.exit(1);
+        }
+    }
+    /*
      * Checks "puzzle" provided by user to ensure it has 6 underscores. 
-     * Outputs error message and exits program if bad input.
+     * If puzzle does not meet criteria, outputs error message and keeps
+     * accepting puzzles from user until puzzle has six underscores.
     */
     static void checkUserPuzzle(String userPuzzle) {
-        int underscoreCount = 0; 
-        for (char c : userPuzzle.toCharArray() ) { // count number of underscores in userPuzzle
-            if (c == '_') ++underscoreCount; 
+        System.out.println("Checking puzzle...");
+        int underscoreCount = 0;
+        boolean puzzleIsBad = true;
+        Scanner scanner = new Scanner(System.in);
+        while (puzzleIsBad) {
+            for (char c : userPuzzle.toCharArray() )
+                if (c == '_') ++underscoreCount;  // count number of underscores in userPuzzle
+            if (underscoreCount != 6) {
+                System.out.println("Error: Invalid puzzle. Puzzle requires six missing letters (in the form of " +
+                        " underscores). Enter another: \n");
+                userPuzzle = scanner.nextLine();
+                underscoreCount = 0; //reset count for next iteration
+            } else
+                puzzleIsBad = false;
         }
-        if (underscoreCount != 6) {
-            System.out.println("Invalid input. Puzzle requires six missing letters.\n");
-            System.exit(0);
+    }
+
+    /*
+    * Checks to make sure spacingIndicator is in format <int,int,...> and that the sum of the lengths
+    *   of each word is equal to the length of the puzzle.
+    * If spacingIndicator does not meet criteria, outputs error message and
+    *   keeps accepting user input until it meets the criteria.
+    *   Pre-condition: userPuzzle is without spaces.
+    *   Post-Condition: spacingIndicator is in a valid form.
+    */
+    static void checkSpacingIndicator(String spacingIndicator, String userPuzzle) {
+        System.out.println("Checking word-lengths...");
+        Scanner scanner = new Scanner(System.in);
+        boolean spacingIndicatorIsBad = true;
+        while (spacingIndicatorIsBad) {
+            if ( !checkSpacingIndicatorInternal(spacingIndicator, userPuzzle) ) {
+                System.out.println("Error: Invalid word lengths. Word lengths must indicated using the form: \n" +
+                        "     int,int,...,int \n" + "The sum of these lengths must be equal to the length " +
+                        "of the puzzle. Enter another string of word lengths: ");
+                spacingIndicator = scanner.nextLine();
+            } else
+                spacingIndicatorIsBad = false;
         }
+    }
+
+    /* Internal method to calculate whether spacingIndicator is valid.
+     * Returns false if invalid.
+     */
+    static boolean checkSpacingIndicatorInternal(String spacingIndicator, String userPuzzle) {
+        int beginIndex = 0; //index of first digit of a number in spacingIndicator
+        int endIndex; //index of char after last digit of same number in spacingIndicator
+        int sumOfWordLengths = 0;
+        int lengthWordInt;
+        String lengthWordStr;
+        int lengthSpacingIndicator = spacingIndicator.length();
+        for (int i = 0; i <= lengthSpacingIndicator; ++i) {
+            if ( (i == lengthSpacingIndicator) || (spacingIndicator.charAt(i) == ',') ) {
+                endIndex = i; //endIndex directly follows last digit in number
+                lengthWordStr = spacingIndicator.substring(beginIndex, endIndex);
+                try { //Make sure each char in spacingIndicator is int or a comma
+                    lengthWordInt = Integer.parseInt(lengthWordStr);
+                } catch (NumberFormatException notAnInt) {
+                    return false;
+                }
+                sumOfWordLengths += lengthWordInt;
+                beginIndex = endIndex + 1; //reset for next iteration
+                if (sumOfWordLengths > userPuzzle.length()) {
+                    return false;
+                }
+            }
+        }
+        if (sumOfWordLengths < userPuzzle.length()) {
+            return false;
+        } else
+            return true;
     }
 
     /*
      * Pre-condition: userPuzzle is one word. spacingIndicator is in the format:
-     *                 "<size of first word>,<size of second word>".
+     *                 "<size of first word>,<size of second word,...>".
      * Post-condition: returns a string equivalent to userPuzzle argument except 
-     *                 with a space inserted at index specified by spacingIndicator. 
+     *                 with space(s) inserted at index(es) specified by spacingIndicator. 
     */
-
-    //TODO: fix so that input accepts more than 2 words
-
     static String formatPuzzleWithSpace(String userPuzzle, String spacingIndicator) {
-        //get length of first word
-        int endIndex = spacingIndicator.indexOf(','); 
-        String lenFirstWordStr = spacingIndicator.substring(0, endIndex);
-        int lenFirstWordInt = Integer.parseInt(lenFirstWordStr); 
-        //insert space
-        StringBuilder formattedUserPuzzle = new StringBuilder(userPuzzle); 
-        formattedUserPuzzle.insert(lenFirstWordInt, " ");  
-        return formattedUserPuzzle.toString(); 
+        int beginIndex = 0; //index of first digit of a number in spacingIndicator
+        int endIndex; //index of char after last digit of same number in spacingIndicator
+        StringBuilder formattedUserPuzzle = new StringBuilder(userPuzzle);
+        int spaceIndex = 0; //index of next space to be inserted
+        for (int i = 0; i < spacingIndicator.length(); ++i ) {
+            if (spacingIndicator.charAt(i) == ',') {
+                endIndex = i; //endIndex directly follows last digit in number
+                String lengthWordStr = spacingIndicator.substring(beginIndex, endIndex);
+                int lengthWordInt = Integer.parseInt(lengthWordStr);
+
+                spaceIndex = spaceIndex + lengthWordInt;
+                formattedUserPuzzle.insert(spaceIndex++, " "); //insert space
+                beginIndex = endIndex +1; //reset for next iteration
+            }
+        }
+        System.out.println("With spaces inserted: " + formattedUserPuzzle);
+        return formattedUserPuzzle.toString();
+
     }
 
     static void checkAgainstDictionary(String possibleAnswer) {
