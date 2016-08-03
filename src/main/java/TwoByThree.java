@@ -18,15 +18,13 @@ public class TwoByThree {
         checkCommandLineArgs(args);
         //get input from command line
         String puzzle = args[0].toLowerCase();
-        checkUserPuzzle(puzzle);
+        puzzle = checkUserPuzzle(puzzle);
         String spacingIndicator = args[1];
-        checkSpacingIndicator(spacingIndicator, puzzle);
+        spacingIndicator = checkSpacingIndicator(spacingIndicator, puzzle);
         String formattedPuzzle = formatPuzzleWithSpace(puzzle, spacingIndicator); 
         globalInputString = formattedPuzzle;
-
         //erase letters from the alphabet array
         prepareAlphabet(puzzle);
-
         //iterate through remaining alphabet letter combinations
         //plug in combinations of letters for each combination
         iterateLetterCombos();
@@ -99,7 +97,7 @@ public class TwoByThree {
      * If puzzle does not meet criteria, outputs error message and keeps
      * accepting puzzles from user until puzzle has six underscores.
     */
-    static void checkUserPuzzle(String userPuzzle) {
+    static String checkUserPuzzle(String userPuzzle) {
         System.out.println("Checking puzzle...");
         int underscoreCount = 0;
         boolean puzzleIsBad = true;
@@ -115,6 +113,7 @@ public class TwoByThree {
             } else
                 puzzleIsBad = false;
         }
+        return userPuzzle;
     }
 
     /*
@@ -125,7 +124,7 @@ public class TwoByThree {
     *   Pre-condition: userPuzzle is without spaces.
     *   Post-Condition: spacingIndicator is in a valid form.
     */
-    static void checkSpacingIndicator(String spacingIndicator, String userPuzzle) {
+    static String checkSpacingIndicator(String spacingIndicator, String userPuzzle) {
         System.out.println("Checking word-lengths...");
         Scanner scanner = new Scanner(System.in);
         boolean spacingIndicatorIsBad = true;
@@ -138,6 +137,7 @@ public class TwoByThree {
             } else
                 spacingIndicatorIsBad = false;
         }
+        return spacingIndicator;
     }
 
     /* Internal method to calculate whether spacingIndicator is valid.
